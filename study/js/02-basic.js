@@ -1,4 +1,5 @@
 import * as THREE from "https://unpkg.com/three@0.150.0/build/three.module.js";
+import {OrbitControls} from "https://unpkg.com/three@0.150.0/examples/jsm/controls/OrbitControls.js";
 
 class App {
   constructor() {
@@ -16,11 +17,16 @@ class App {
     this._setupCamera();
     this._setupLight();
     this._setupModel();
+    this._setupControls();
 
     window.onresize = this.resize.bind(this);
     this.resize();
 
     requestAnimationFrame(this.render.bind(this));
+  }
+
+  _setupControls() {
+    new OrbitControls(this._camera, this._divContainer);
   }
 
   _setupCamera() {
@@ -41,12 +47,18 @@ class App {
 
   _setupModel() {
     const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshPhongMaterial({color: 0x044aa8});
+    const fillMaterial = new THREE.MeshPhongMaterial({color: 0x515151});
+    const cube = new THREE.Mesh(geometry, fillMaterial);
 
-    const cube = new THREE.Mesh(geometry, material);
+    const lineMaterial = new THREE.LineBasicMaterial({color: 0xffff00});
+    const line = new THREE.LineSegments(new THREE.WireframeGeometry(geometry), lineMaterial);
 
-    this._scene.add(cube);
-    this._cube = cube;
+    const group = new THREE.Group();
+    group.add(cube);
+    group.add(line);
+
+    this._scene.add(group);
+    this._cube = group;
   }
 
   resize() {
@@ -67,8 +79,8 @@ class App {
 
   update(time) {
     time *= 0.001;
-    this._cube.rotation.x = time;
-    this._cube.rotation.y = time;
+    //this._cube.rotation.x = time;
+    //this._cube.rotation.y = time;
   }
 }
 
