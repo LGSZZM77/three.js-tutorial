@@ -46,33 +46,21 @@ class App {
   }
 
   _setupModel() {
-    const vertices = [];
-    for (let i = 0; i < 10000; i++) {
-      const x = THREE.MathUtils.randFloatSpread(5);
-      const y = THREE.MathUtils.randFloatSpread(5);
-      const z = THREE.MathUtils.randFloatSpread(5);
-
-      vertices.push(x, y, z);
-    }
+    const vertices = [-1, 1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0];
 
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
 
-    const sprite = new THREE.TextureLoader().load(
-      "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/sprites/disc.png",
-      // "../images/jeyong.jpg",
-    );
-
-    const material = new THREE.PointsMaterial({
-      map: sprite,
-      alphaTest: 0.5,
-      color: 0xffffff,
-      size: 0.1,
-      sizeAttenuation: true,
+    const material = new THREE.LineDashedMaterial({
+      color: 0xff0000,
+      dashSize: 0.2,
+      gapSize: 0.1,
+      scale: 1,
     });
 
-    const points = new THREE.Points(geometry, material);
-    this._scene.add(points);
+    const line = new THREE.LineLoop(geometry, material);
+    line.computeLineDistances();
+    this._scene.add(line);
   }
 
   resize() {
