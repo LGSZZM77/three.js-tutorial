@@ -46,15 +46,16 @@ class App {
   }
 
   _setupModel() {
-    const material = new THREE.MeshPhysicalMaterial({
-      color: 0xff0000,
-      emissive: 0x000000,
-      roughness: 1,
-      metalness: 0,
-      clearcoat: 1,
-      clearcoatRoughness: 0,
-      flatShading: false,
-      wireframe: false,
+    const textureLoader = new THREE.TextureLoader();
+    const map = textureLoader.load(
+      "https://raw.githubusercontent.com/mrdoob/three.js/r150/examples/textures/uv_grid_opengl.jpg",
+      (texture) => {
+        texture.repeat.x = 1;
+        texture.repeat.y = 1;
+      },
+    );
+    const material = new THREE.MeshStandardMaterial({
+      map: map,
     });
 
     const box = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), material);
