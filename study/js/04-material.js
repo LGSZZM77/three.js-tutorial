@@ -33,7 +33,7 @@ class App {
     const width = this._divContainer.clientWidth;
     const height = this._divContainer.clientHeight;
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
-    camera.position.z = 7;
+    camera.position.z = 3;
     this._camera = camera;
   }
 
@@ -46,21 +46,24 @@ class App {
   }
 
   _setupModel() {
-    const vertices = [-1, 1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0];
-
-    const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
-
-    const material = new THREE.LineDashedMaterial({
+    const material = new THREE.MeshPhysicalMaterial({
       color: 0xff0000,
-      dashSize: 0.2,
-      gapSize: 0.1,
-      scale: 1,
+      emissive: 0x000000,
+      roughness: 1,
+      metalness: 0,
+      clearcoat: 1,
+      clearcoatRoughness: 0,
+      flatShading: false,
+      wireframe: false,
     });
 
-    const line = new THREE.LineLoop(geometry, material);
-    line.computeLineDistances();
-    this._scene.add(line);
+    const box = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), material);
+    box.position.set(-1, 0, 0);
+    this._scene.add(box);
+
+    const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.7, 32, 32), material);
+    sphere.position.set(1, 0, 0);
+    this._scene.add(sphere);
   }
 
   resize() {
